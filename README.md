@@ -1,10 +1,10 @@
-ExNifcloud.Computing
+ExNifcloud.Computing
 ================
 
 Description
 -----------
 
-[ExNifcloud](https://github.com/kzmake/ex_nifcloud) で使用する Operations を作成するための Computing 系サービスのモジュールです。
+[ExNifcloud](https://github.com/kzmake/ex_nifcloud) で使用する Operations を作成するための Computing 系サービスのモジュールです。
 
 Getting Started
 ------------
