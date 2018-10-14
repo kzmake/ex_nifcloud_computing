@@ -1,5 +1,11 @@
 defmodule ExNifcloud.Computing do
-  @moduledoc false
+  @moduledoc """
+  Computing(Nifcloud) のオペレーション群
+
+  ## リソース
+
+  - ExNifcloud.Computing.Instances
+  """
 
   @service :computing
 

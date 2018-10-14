@@ -29,7 +29,6 @@ defmodule ExNifcloud.Computing.Instances do
         service: :computing
       }
 
-
       iex> ExNifcloud.Computing.Instance.describe_instances(instance_ids: ["hoge", "fuga"])
       %ExNifcloud.Operation.Query{
         action: :describe_instances,
