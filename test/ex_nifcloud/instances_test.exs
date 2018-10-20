@@ -105,4 +105,15 @@ defmodule ExNifcloud.Computing.Test do
                ]
              )
   end
+
+  test "stop_instances with options" do
+    expected =
+      Helper.build_query(
+        :stop_instances,
+        %{Force: "true", "InstanceId.1": "instance_name_a", "InstanceId.2": "instance_name_b"}
+      )
+
+    assert expected ==
+             Computing.stop_instances(["instance_name_a", "instance_name_b"], force: "true")
+  end
 end

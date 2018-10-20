@@ -97,4 +97,37 @@ defmodule ExNifcloud.Computing do
     ]
     |> Utils.build_operation(:run_instances)
   end
+
+  @doc """
+  インスタンスを停止するための Operation を生成します
+
+  ## API Doc:
+
+    - https://cloud.nifty.com/api/rest/StopInstances.htm
+
+  ## Examples:
+
+      iex> ExNifcloud.Computing.stop_instances(["instance_name_1", "instance_name_2"], force: "true")
+      %ExNifcloud.Operation.Query{
+        action: :stop_instances,
+        params: %{
+          "InstanceId.1": "instance_name_1",
+          "InstanceId.2": "instance_name_2",
+          Force: "true"
+        },
+        parser: &ExNifcloud.Utils.identity/2,
+        path: "/api/",
+        service: :computing
+      }
+  """
+  @type stop_instances_opts :: [
+          force: binary
+        ]
+  @spec stop_instances(instance_ids :: [binary, ...]) :: ExAws.Operation.Query.t()
+  @spec stop_instances(instance_ids :: [binary, ...], opts :: stop_instances_opts) ::
+          ExAws.Operation.Query.t()
+  def stop_instances(instance_ids, opts \\ []) do
+    [{:instance_ids, instance_ids} | opts]
+    |> Utils.build_operation(:stop_instances)
+  end
 end
