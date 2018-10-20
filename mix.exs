@@ -55,7 +55,7 @@ defmodule ExNifcloud.Computing.MixProject do
   end
 
   defp switch_ex_nifcloud do
-    case String.upcase(System.get_env("EX_NIFCLOUD")) do
+    case System.get_env("EX_NIFCLOUD") do
       "LOCAL" -> {:ex_nifcloud, path: "../ex_nifcloud"}
       _ -> {:ex_nifcloud, "~> 0.0.1"}
     end
