@@ -1,64 +1,100 @@
 defmodule ExNifcloud.Computing do
   @moduledoc """
   Computing(Nifcloud) のオペレーション群
-
-  ## リソース
-
-  - ExNifcloud.Computing.Instances
   """
+  alias ExNifcloud.Computing.Utils
 
-  @service :computing
+  @type network_interface_spec :: [
+          network_interface_id: binary,
+          private_ip_address: binary
+        ]
 
-  # ---------------- #
-  # Helper Functions #
-  # ---------------- #
+  @type license_spec :: [
+          license_name: binary,
+          license_num: binary
+        ]
 
-  def build_request(opts, action) do
+  # ---------- #
+  # Operations #
+  # ---------- #
+
+  @doc """
+  インスタンスの情報を取得するための Operation を生成します(インスタンス名を指定して特定のインスタンス情報を取得することも可能)
+
+  ## API Doc:
+
+    - https://cloud.nifty.com/api/rest/DescribeInstances.htm
+
+  ## Examples:
+
+      iex> ExNifcloud.Computing.describe_instances
+      %ExNifcloud.Operation.Query{
+        action: :describe_instances,
+        params: %{},
+        parser: &ExNifcloud.Utils.identity/2,
+        path: "/api/",
+        service: :computing
+      }
+  """
+  @type describe_instances_opts :: [
+          instance_ids: [binary, ...]
+        ]
+  @spec describe_instances() :: ExNifcloud.Operation.Query.t()
+  @spec describe_instances(opts :: describe_instances_opts) :: ExNifcloud.Operation.Query.t()
+  def describe_instances(opts \\ []) do
     opts
-    |> Enum.flat_map(&format_param/1)
-    |> request(action)
+    |> Utils.build_operation(:describe_instances)
   end
 
-  defp request(params, action) do
-    action_string =
-      action
-      |> Atom.to_string()
-      |> Macro.camelize()
+  @doc """
+  インスタンスを生成するための Operation を生成します
 
-    %ExNifcloud.Operation.Query{
-      path: "/api/",
-      params:
-        params
-        |> filter_nil_params
-        |> Map.put(:Action, action_string),
-      service: @service,
-      action: action
-    }
+  ## API Doc:
+
+    - https://cloud.nifty.com/api/rest/RunInstances.htm
+
+  ## Examples:
+
+      iex> ExNifcloud.Computing.run_instances("89", key_name: "key_name", security_groups: "security_group_name")
+      %ExNifcloud.Operation.Query{
+        action: :run_instances,
+        params: %{
+          ImageId: "89",
+          KeyName: "key_name",
+          SecurityGroup: "security_group_name"
+        },
+        parser: &ExNifcloud.Utils.identity/2,
+        path: "/api/",
+        service: :computing
+      }
+  """
+  @type run_instances_opts :: [
+          key_name: binary,
+          security_groups: [binary, ...],
+          user_date: binary,
+          user_date_encoding: binary,
+          instance_type: binary,
+          availability_zone: binary,
+          disable_api_termination: binary,
+          accounting_type: binary,
+          instance_id: binary,
+          admin: binary,
+          password: binary,
+          ip_type: binary,
+          public_ip: binary,
+          agreement: binary,
+          description: binary,
+          network_interfaces: [network_interface_spec, ...],
+          licenses: [license_spec, ...]
+        ]
+  @spec run_instances(image_id :: binary) :: ExNifcloud.Operation.Query.t()
+  @spec run_instances(image_id :: binary, opts :: run_instances_opts) ::
+          ExNifcloud.Operation.Query.t()
+  def run_instances(image_id, opts \\ []) do
+    [
+      {:image_id, image_id}
+      | opts
+    ]
+    |> Utils.build_operation(:run_instances)
   end
-
-  defp filter_nil_params(opts) do
-    opts
-    |> Enum.reject(fn {_key, value} -> value == nil end)
-    |> Enum.into(%{})
-  end
-
-  # ---------------- #
-  # Format Functions #
-  # ---------------- #
-
-  defp format_param({:instance_ids, instance_ids}) do
-    instance_ids
-    |> format(prefix: "InstanceId")
-  end
-
-  defp format(params, prefix: prefix) when is_list(params) do
-    params
-    |> Stream.with_index(1)
-    |> Stream.map(fn {value, i} -> {value, Integer.to_string(i)} end)
-    |> Stream.map(fn {value, i} -> {String.to_atom(prefix <> dot?(prefix) <> i), value} end)
-    |> Enum.to_list()
-  end
-
-  defp dot?(""), do: ""
-  defp dot?(_), do: "."
 end

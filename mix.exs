@@ -1,7 +1,7 @@
 defmodule ExNifcloud.Computing.MixProject do
   use Mix.Project
 
-  @version "0.0.1"
+  @version "0.0.2"
   @service "computing"
   @url "https://github.com/kzmake/ex_nifcloud_#{@service}"
   @name __MODULE__
@@ -47,6 +47,7 @@ defmodule ExNifcloud.Computing.MixProject do
   defp deps do
     [
       switch_ex_nifcloud(),
+      {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:earmark, ">= 0.0.0", only: :dev},
       {:hackney, ">= 0.0.0", only: [:dev, :test]}
@@ -54,9 +55,9 @@ defmodule ExNifcloud.Computing.MixProject do
   end
 
   defp switch_ex_nifcloud do
-    case String.upcase(System.get_env("EX_NIFCLOUD")) do
+    case System.get_env("EX_NIFCLOUD") do
       "LOCAL" -> {:ex_nifcloud, path: "../ex_nifcloud"}
-      _ -> {:ex_nifcloud, "~> 0.0.1"}
+      _ -> {:ex_nifcloud, "~> 0.0.2"}
     end
   end
 end
