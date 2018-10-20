@@ -47,6 +47,7 @@ defmodule ExNifcloud.Computing.MixProject do
   defp deps do
     [
       switch_ex_nifcloud(),
+      {:mix_test_watch, "~> 0.8", only: :dev, runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:earmark, ">= 0.0.0", only: :dev},
       {:hackney, ">= 0.0.0", only: [:dev, :test]}
