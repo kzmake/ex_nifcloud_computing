@@ -52,8 +52,8 @@ defmodule ExNifcloud.Computing.Test do
           IpType: "elastic",
           Password: "1234",
           PublicIp: "192.0.2.10",
-          UserDate: "user_data",
-          UserDateEncoding: "",
+          UserData: "user_data",
+          "UserData.Encoding": "",
           "NetworkInterface.1.NetworkId": "net-COMMON_GLOBAL",
           "NetworkInterface.1.IpAddress": "192.0.2.10",
           "NetworkInterface.2.NetworkName": "network_name",
@@ -70,8 +70,8 @@ defmodule ExNifcloud.Computing.Test do
                "1",
                key_name: "key_name",
                security_groups: ["security_group_name"],
-               user_date: "user_data",
-               user_date_encoding: "",
+               user_data: "user_data",
+               user_data_encoding: "",
                instance_type: "large",
                availability_zone: "east-11",
                disable_api_termination: "false",
@@ -145,7 +145,8 @@ defmodule ExNifcloud.Computing.Test do
       )
 
     assert expected ==
-             Computing.describe_instance_attribute("instance_name",
+             Computing.describe_instance_attribute(
+               "instance_name",
                attribute: "disableApiTermination"
              )
   end
@@ -172,6 +173,32 @@ defmodule ExNifcloud.Computing.Test do
                nifty_reboot: "force",
                force: "true",
                tenancy: "dedicated"
+             )
+  end
+
+  test "reboot_instances with options" do
+    expected =
+      Helper.build_query(
+        :reboot_instances,
+        %{
+          "InstanceId.1": "instance_name_1",
+          "InstanceId.2": "instance_name_2",
+          UserData: "script",
+          "UserData.Encoding": "base64",
+          Force: "true",
+          NiftyIsBios: "false",
+          "Tenancy.1": "all"
+        }
+      )
+
+    assert expected ==
+             Computing.reboot_instances(
+               ["instance_name_1", "instance_name_2"],
+               user_data: "script",
+               user_data_encoding: "base64",
+               force: "true",
+               nifty_is_bios: "false",
+               tenancys: ["all"]
              )
   end
 end

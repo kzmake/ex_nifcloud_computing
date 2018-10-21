@@ -34,6 +34,14 @@ defmodule ExNifcloud.Computing.Utils do
   # Format Functions #
   # ---------------- #
 
+  defp format_param({:user_data_encoding, value}) do
+    format(value, prefix: "UserData.Encoding")
+  end
+
+  defp format_param({:nifty_is_bios, value}) do
+    format(value, prefix: "NiftyIsBios")
+  end
+
   defp format_param({key, value}) when is_atom(key) do
     prefix =
       key
