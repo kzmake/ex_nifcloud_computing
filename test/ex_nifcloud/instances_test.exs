@@ -149,4 +149,29 @@ defmodule ExNifcloud.Computing.Test do
                attribute: "disableApiTermination"
              )
   end
+
+  test "modify_instance_attribute with options" do
+    expected =
+      Helper.build_query(
+        :modify_instance_attribute,
+        %{
+          InstanceId: "instance_name",
+          Attribute: "disableApiTermination",
+          Value: "false",
+          Force: "true",
+          NiftyReboot: "force",
+          Tenancy: "dedicated"
+        }
+      )
+
+    assert expected ==
+             Computing.modify_instance_attribute(
+               "instance_name",
+               "disableApiTermination",
+               "false",
+               nifty_reboot: "force",
+               force: "true",
+               tenancy: "dedicated"
+             )
+  end
 end
