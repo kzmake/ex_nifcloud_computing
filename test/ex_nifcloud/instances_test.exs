@@ -52,8 +52,8 @@ defmodule ExNifcloud.Computing.Test do
           IpType: "elastic",
           Password: "1234",
           PublicIp: "192.0.2.10",
-          UserDate: "user_data",
-          UserDateEncoding: "",
+          UserData: "user_data",
+          "UserData.Encoding": "",
           "NetworkInterface.1.NetworkId": "net-COMMON_GLOBAL",
           "NetworkInterface.1.IpAddress": "192.0.2.10",
           "NetworkInterface.2.NetworkName": "network_name",
@@ -70,8 +70,8 @@ defmodule ExNifcloud.Computing.Test do
                "1",
                key_name: "key_name",
                security_groups: ["security_group_name"],
-               user_date: "user_data",
-               user_date_encoding: "",
+               user_data: "user_data",
+               user_data_encoding: "",
                instance_type: "large",
                availability_zone: "east-11",
                disable_api_termination: "false",
@@ -103,6 +103,132 @@ defmodule ExNifcloud.Computing.Test do
                    license_num: "200"
                  ]
                ]
+             )
+  end
+
+  test "stop_instances with options" do
+    expected =
+      Helper.build_query(
+        :stop_instances,
+        %{
+          Force: "true",
+          "InstanceId.1": "instance_name_a",
+          "InstanceId.2": "instance_name_b"
+        }
+      )
+
+    assert expected ==
+             Computing.stop_instances(["instance_name_a", "instance_name_b"], force: "true")
+  end
+
+  test "terminate_instances no options" do
+    expected =
+      Helper.build_query(
+        :terminate_instances,
+        %{
+          "InstanceId.1": "instance_name_a",
+          "InstanceId.2": "instance_name_b"
+        }
+      )
+
+    assert expected == Computing.terminate_instances(["instance_name_a", "instance_name_b"])
+  end
+
+  test "describe_instance_attribute with options" do
+    expected =
+      Helper.build_query(
+        :describe_instance_attribute,
+        %{
+          InstanceId: "instance_name",
+          Attribute: "disableApiTermination"
+        }
+      )
+
+    assert expected ==
+             Computing.describe_instance_attribute(
+               "instance_name",
+               attribute: "disableApiTermination"
+             )
+  end
+
+  test "modify_instance_attribute with options" do
+    expected =
+      Helper.build_query(
+        :modify_instance_attribute,
+        %{
+          InstanceId: "instance_name",
+          Attribute: "disableApiTermination",
+          Value: "false",
+          Force: "true",
+          NiftyReboot: "force",
+          Tenancy: "dedicated"
+        }
+      )
+
+    assert expected ==
+             Computing.modify_instance_attribute(
+               "instance_name",
+               "disableApiTermination",
+               "false",
+               nifty_reboot: "force",
+               force: "true",
+               tenancy: "dedicated"
+             )
+  end
+
+  test "reboot_instances with options" do
+    expected =
+      Helper.build_query(
+        :reboot_instances,
+        %{
+          "InstanceId.1": "instance_name_1",
+          "InstanceId.2": "instance_name_2",
+          UserData: "script",
+          "UserData.Encoding": "base64",
+          Force: "true",
+          NiftyIsBios: "false",
+          "Tenancy.1": "all"
+        }
+      )
+
+    assert expected ==
+             Computing.reboot_instances(
+               ["instance_name_1", "instance_name_2"],
+               user_data: "script",
+               user_data_encoding: "base64",
+               force: "true",
+               nifty_is_bios: "false",
+               tenancys: ["all"]
+             )
+  end
+
+  test "start_instances with options" do
+    expected =
+      Helper.build_query(
+        :start_instances,
+        %{
+          "InstanceId.1": "instance_name_1",
+          "InstanceId.2": "instance_name_2",
+          UserData: "script",
+          "UserData.Encoding": "base64",
+          "InstanceType.1": "mini",
+          "InstanceType.2": "small",
+          "AccountingType.1": "2",
+          "AccountingType.2": "1",
+          NiftyIsBios: "false",
+          "Tenancy.1": "all"
+        }
+      )
+
+    assert expected ==
+             Computing.start_instances(
+               ["instance_name_1", "instance_name_2"],
+               user_data: "script",
+               user_data_encoding: "base64",
+               accounting_types: ["2", "1"],
+               instance_types: ["mini", "small"],
+               nifty_is_bios: "false",
+               tenancys: ["all"]
              )
   end
 end
