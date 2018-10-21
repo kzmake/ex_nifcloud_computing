@@ -71,8 +71,8 @@ defmodule ExNifcloud.Computing do
   @type run_instances_opts :: [
           key_name: binary,
           security_groups: [binary, ...],
-          user_date: binary,
-          user_date_encoding: binary,
+          user_data: binary,
+          user_data_encoding: binary,
           instance_type: binary,
           availability_zone: binary,
           disable_api_termination: binary,
@@ -231,5 +231,43 @@ defmodule ExNifcloud.Computing do
   def modify_instance_attribute(instance_id, attribute, value, opts \\ []) do
     [{:instance_id, instance_id}, {:attribute, attribute}, {:value, value} | opts]
     |> Utils.build_operation(:modify_instance_attribute)
+  end
+
+  @doc """
+  インスタンスを Reboot するための Operation を生成します
+
+  ## API Doc:
+
+    - https://cloud.nifty.com/api/rest/RebootInstances.htm
+
+  ## Examples:
+
+      iex> ExNifcloud.Computing.reboot_instances(["instance_name_1", "instance_name_2"])
+      %ExNifcloud.Operation.Query{
+        action: :reboot_instances,
+        params: %{
+          "InstanceId.1": "instance_name_1",
+          "InstanceId.2": "instance_name_2"
+        },
+        parser: &ExNifcloud.Utils.identity/2,
+        path: "/api/",
+        service: :computing
+      }
+  """
+  @type reboot_instances_opts :: [
+          user_data: binary,
+          user_data_encoding: binary,
+          force: binary,
+          nifty_is_bios: binary,
+          tenancys: [binary, ...]
+        ]
+  @spec reboot_instances(instance_ids :: [binary, ...]) :: ExNifcloud.Operation.Query.t()
+  @spec reboot_instances(
+          instance_ids :: [binary, ...],
+          opts :: reboot_instances_opts
+        ) :: ExNifcloud.Operation.Query.t()
+  def reboot_instances(instance_ids, opts \\ []) do
+    [{:instance_ids, instance_ids} | opts]
+    |> Utils.build_operation(:reboot_instances)
   end
 end
