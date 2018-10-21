@@ -270,4 +270,43 @@ defmodule ExNifcloud.Computing do
     [{:instance_ids, instance_ids} | opts]
     |> Utils.build_operation(:reboot_instances)
   end
+
+  @doc """
+  インスタンスを起動するための Operation を生成します
+
+  ## API Doc:
+
+    - https://cloud.nifty.com/api/rest/StartInstances.htm
+
+  ## Examples:
+
+      iex> ExNifcloud.Computing.start_instances(["instance_name_1", "instance_name_2"])
+      %ExNifcloud.Operation.Query{
+        action: :start_instances,
+        params: %{
+          "InstanceId.1": "instance_name_1",
+          "InstanceId.2": "instance_name_2"
+        },
+        parser: &ExNifcloud.Utils.identity/2,
+        path: "/api/",
+        service: :computing
+      }
+  """
+  @type start_instances_opts :: [
+          user_data: binary,
+          user_data_encoding: binary,
+          accountung_types: [binary, ...],
+          instance_types: [binary, ...],
+          nifty_is_bios: binary,
+          tenancys: [binary, ...]
+        ]
+  @spec start_instances(instance_ids :: [binary, ...]) :: ExNifcloud.Operation.Query.t()
+  @spec start_instances(
+          instance_ids :: [binary, ...],
+          opts :: start_instances_opts
+        ) :: ExNifcloud.Operation.Query.t()
+  def start_instances(instance_ids, opts \\ []) do
+    [{:instance_ids, instance_ids} | opts]
+    |> Utils.build_operation(:start_instances)
+  end
 end

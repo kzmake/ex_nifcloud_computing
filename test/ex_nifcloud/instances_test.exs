@@ -201,4 +201,34 @@ defmodule ExNifcloud.Computing.Test do
                tenancys: ["all"]
              )
   end
+
+  test "start_instances with options" do
+    expected =
+      Helper.build_query(
+        :start_instances,
+        %{
+          "InstanceId.1": "instance_name_1",
+          "InstanceId.2": "instance_name_2",
+          UserData: "script",
+          "UserData.Encoding": "base64",
+          "InstanceType.1": "mini",
+          "InstanceType.2": "small",
+          "AccountingType.1": "2",
+          "AccountingType.2": "1",
+          NiftyIsBios: "false",
+          "Tenancy.1": "all"
+        }
+      )
+
+    assert expected ==
+             Computing.start_instances(
+               ["instance_name_1", "instance_name_2"],
+               user_data: "script",
+               user_data_encoding: "base64",
+               accounting_types: ["2", "1"],
+               instance_types: ["mini", "small"],
+               nifty_is_bios: "false",
+               tenancys: ["all"]
+             )
+  end
 end
