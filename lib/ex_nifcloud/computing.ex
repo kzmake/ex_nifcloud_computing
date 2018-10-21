@@ -158,4 +158,38 @@ defmodule ExNifcloud.Computing do
     [{:instance_ids, instance_ids}]
     |> Utils.build_operation(:terminate_instances)
   end
+
+  @doc """
+  インスタンスの詳細情報を取得するための Operation を生成します
+
+  ## API Doc:
+
+    - https://cloud.nifty.com/api/rest/DescribeInstanceAttribute.htm
+
+  ## Examples:
+
+      iex> ExNifcloud.Computing.describe_instance_attribute("instance_name", attribute: "instanceType")
+      %ExNifcloud.Operation.Query{
+        action: :describe_instance_attribute,
+        params: %{
+          InstanceId: "instance_name",
+          Attribute: "instanceType"
+        },
+        parser: &ExNifcloud.Utils.identity/2,
+        path: "/api/",
+        service: :computing
+      }
+  """
+  @type describe_instance_attribute_opts :: [
+          attribute: binary
+        ]
+  @spec describe_instance_attribute(instance_id :: binary) :: ExNifcloud.Operation.Query.t()
+  @spec describe_instance_attribute(
+          instance_id :: binary,
+          opts :: describe_instance_attribute_opts
+        ) :: ExNifcloud.Operation.Query.t()
+  def describe_instance_attribute(instance_id, opts \\ []) do
+    [{:instance_id, instance_id} | opts]
+    |> Utils.build_operation(:describe_instance_attribute)
+  end
 end

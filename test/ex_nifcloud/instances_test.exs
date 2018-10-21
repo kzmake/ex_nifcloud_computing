@@ -133,4 +133,20 @@ defmodule ExNifcloud.Computing.Test do
 
     assert expected == Computing.terminate_instances(["instance_name_a", "instance_name_b"])
   end
+
+  test "describe_instance_attribute with options" do
+    expected =
+      Helper.build_query(
+        :describe_instance_attribute,
+        %{
+          InstanceId: "instance_name",
+          Attribute: "disableApiTermination"
+        }
+      )
+
+    assert expected ==
+             Computing.describe_instance_attribute("instance_name",
+               attribute: "disableApiTermination"
+             )
+  end
 end
