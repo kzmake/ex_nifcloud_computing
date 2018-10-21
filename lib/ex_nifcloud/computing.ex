@@ -192,4 +192,44 @@ defmodule ExNifcloud.Computing do
     [{:instance_id, instance_id} | opts]
     |> Utils.build_operation(:describe_instance_attribute)
   end
+
+  @doc """
+  インスタンスの情報を更新するための Operation を生成します
+
+  ## API Doc:
+
+    - https://cloud.nifty.com/api/rest/ModifyInstanceAttribute.htm
+
+  ## Examples:
+
+      iex> ExNifcloud.Computing.modify_instance_attribute("instance_name", "instanceType", "small")
+      %ExNifcloud.Operation.Query{
+        action: :modify_instance_attribute,
+        params: %{
+          InstanceId: "instance_name",
+          Attribute: "instanceType",
+          Value: "small"
+        },
+        parser: &ExNifcloud.Utils.identity/2,
+        path: "/api/",
+        service: :computing
+      }
+  """
+  @type modify_instance_attribute_opts :: [
+          nifty_reboot: binary,
+          force: binary,
+          tenancy: binary
+        ]
+  @spec modify_instance_attribute(instance_id :: binary, attribute :: binary, value :: binary) ::
+          ExNifcloud.Operation.Query.t()
+  @spec modify_instance_attribute(
+          instance_id :: binary,
+          attribute :: binary,
+          value :: binary,
+          opts :: modify_instance_attribute_opts
+        ) :: ExNifcloud.Operation.Query.t()
+  def modify_instance_attribute(instance_id, attribute, value, opts \\ []) do
+    [{:instance_id, instance_id}, {:attribute, attribute}, {:value, value} | opts]
+    |> Utils.build_operation(:modify_instance_attribute)
+  end
 end
