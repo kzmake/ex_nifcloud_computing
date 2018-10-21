@@ -123,11 +123,39 @@ defmodule ExNifcloud.Computing do
   @type stop_instances_opts :: [
           force: binary
         ]
-  @spec stop_instances(instance_ids :: [binary, ...]) :: ExAws.Operation.Query.t()
+  @spec stop_instances(instance_ids :: [binary, ...]) :: ExNifcloud.Operation.Query.t()
   @spec stop_instances(instance_ids :: [binary, ...], opts :: stop_instances_opts) ::
-          ExAws.Operation.Query.t()
+          ExNifcloud.Operation.Query.t()
   def stop_instances(instance_ids, opts \\ []) do
     [{:instance_ids, instance_ids} | opts]
     |> Utils.build_operation(:stop_instances)
+  end
+
+  @doc """
+  インスタンスを削除するための Operation を生成します
+
+  ## API Doc:
+
+    - https://cloud.nifty.com/api/rest/TerminateInstances.htm
+
+  ## Examples:
+
+      iex> ExNifcloud.Computing.terminate_instances(["instance_name_1", "instance_name_2"])
+      %ExNifcloud.Operation.Query{
+        action: :terminate_instances,
+        params: %{
+          "InstanceId.1": "instance_name_1",
+          "InstanceId.2": "instance_name_2"
+        },
+        parser: &ExNifcloud.Utils.identity/2,
+        path: "/api/",
+        service: :computing
+      }
+  """
+  @spec terminate_instances(instance_ids :: [binary, ...]) :: ExNifcloud.Operation.Query.t()
+
+  def terminate_instances(instance_ids) do
+    [{:instance_ids, instance_ids}]
+    |> Utils.build_operation(:terminate_instances)
   end
 end

@@ -110,10 +110,28 @@ defmodule ExNifcloud.Computing.Test do
     expected =
       Helper.build_query(
         :stop_instances,
-        %{Force: "true", "InstanceId.1": "instance_name_a", "InstanceId.2": "instance_name_b"}
+        %{
+          Force: "true",
+          "InstanceId.1": "instance_name_a",
+          "InstanceId.2": "instance_name_b"
+        }
       )
 
     assert expected ==
              Computing.stop_instances(["instance_name_a", "instance_name_b"], force: "true")
+  end
+
+  test "terminate_instances no options" do
+    expected =
+      Helper.build_query(
+        :terminate_instances,
+        %{
+          "InstanceId.1": "instance_name_a",
+          "InstanceId.2": "instance_name_b"
+        }
+      )
+
+    assert expected ==
+             Computing.terminate_instances(["instance_name_a", "instance_name_b"])
   end
 end
