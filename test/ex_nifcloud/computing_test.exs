@@ -6,6 +6,40 @@ defmodule ExNifcloud.Computing.Test do
   alias ExNifcloud.Computing
   alias Test.ExNifclod.Computing.Helper
 
+  # ------------------------ #
+  # Network Interfaces Tests #
+  # ------------------------ #
+
+  test "describe_network_instances no options" do
+    expected = Helper.build_query(:describe_network_interfaces, %{})
+    assert expected == Computing.describe_network_interfaces()
+  end
+
+  test "describe_network_instances with ops" do
+    expected =
+      Helper.build_query(
+        :describe_network_interfaces,
+        %{
+          "NetworkInterface.1": "ni-xxxxxxxx",
+          "NetworkInterface.2": "ni-yyyyyyyy",
+          "Filter.1.Name": "description",
+          "Filter.1.Value.1": "aaaa",
+          "Filter.1.Value.2": "bbbb"
+        }
+      )
+
+    assert expected ==
+             Computing.describe_network_interfaces(
+               network_interfaces: ["ni-xxxxxxxx", "ni-yyyyyyyy"],
+               filters: [
+                 [
+                   name: "description",
+                   value: ["aaaa", "bbbb"]
+                 ]
+               ]
+             )
+  end
+
   # --------------- #
   # Instances Tests #
   # --------------- #
