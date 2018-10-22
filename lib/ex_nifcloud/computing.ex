@@ -14,6 +14,11 @@ defmodule ExNifcloud.Computing do
           license_num: binary
         ]
 
+  @type filter_spec :: [
+          name: binary,
+          values: [binary, ...]
+        ]
+
   # ---------- #
   # Operations #
   # ---------- #
@@ -308,5 +313,38 @@ defmodule ExNifcloud.Computing do
   def start_instances(instance_ids, opts \\ []) do
     [{:instance_ids, instance_ids} | opts]
     |> Utils.build_operation(:start_instances)
+  end
+
+  @doc """
+  ネットワークインターフェースの情報を取得するための Operation を生成します(ネットワークインターフェースの UniqueId を指定して特定の情報を取得することも可能)
+
+  ## API Doc:
+
+    - https://cloud.nifty.com/api/rest/DescribeNetworkInterfaces.htm
+
+  ## Examples:
+
+      iex> ExNifcloud.Computing.describe_network_interfaces(network_interface_ids: ["ni-xxxxxxxx", "ni-yyyyyyyy"])
+      %ExNifcloud.Operation.Query{
+        action: :describe_network_interfaces,
+        params: %{
+          "NetworkInterfaceId.1": "ni-xxxxxxxx",
+          "NetworkInterfaceId.2": "ni-yyyyyyyy"
+        },
+        parser: &ExNifcloud.Utils.identity/2,
+        path: "/api/",
+        service: :computing
+      }
+  """
+  @type describe_network_interfaces_opts :: [
+          network_interface_ids: [binary, ...],
+          filters: [filter_spec, ...]
+        ]
+  @spec describe_network_interfaces() :: ExNifcloud.Operation.Query.t()
+  @spec describe_network_interfaces(opts :: describe_network_interfaces_opts) ::
+          ExNifcloud.Operation.Query.t()
+  def describe_network_interfaces(opts \\ []) do
+    opts
+    |> Utils.build_operation(:describe_network_interfaces)
   end
 end
