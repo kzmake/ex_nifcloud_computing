@@ -40,6 +40,27 @@ defmodule ExNifcloud.Computing.Test do
              )
   end
 
+  test "create_network_interface with ops" do
+    expected =
+      Helper.build_query(
+        :create_network_interface,
+        %{
+          NiftyNetworkId: "net-xxxxxxxx",
+          IpAddress: "static",
+          "Placement.AvailabilityZone": "east-11",
+          Description: "description"
+        }
+      )
+
+    assert expected ==
+             Computing.create_network_interface(
+               "net-xxxxxxxx",
+               ip_address: "static",
+               placement_availability_zone: "east-11",
+               description: "description"
+             )
+  end
+
   # --------------- #
   # Instances Tests #
   # --------------- #
