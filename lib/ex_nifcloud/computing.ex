@@ -347,4 +347,37 @@ defmodule ExNifcloud.Computing do
     opts
     |> Utils.build_operation(:describe_network_interfaces)
   end
+
+  @doc """
+  ネットワークインターフェースを生成するための Operation を生成します
+
+  ## API Doc:
+
+    - https://cloud.nifty.com/api/rest/CreateNetworkInterface.htm
+
+  ## Examples:
+
+      iex> ExNifcloud.Computing.create_network_interface("net-xxxxxxxx")
+      %ExNifcloud.Operation.Query{
+        action: :create_network_interface,
+        params: %{
+          NiftyNetworkId: "net-xxxxxxxx",
+        },
+        parser: &ExNifcloud.Utils.identity/2,
+        path: "/api/",
+        service: :computing
+      }
+  """
+  @type create_network_interface_opts :: [
+          ip_address: binary,
+          placement_availability_zone: binary,
+          description: binary
+        ]
+  @spec create_network_interface(network_id :: binary) :: ExNifcloud.Operation.Query.t()
+  @spec create_network_interface(network_id :: binary, opts :: create_network_interface_opts) ::
+          ExNifcloud.Operation.Query.t()
+  def create_network_interface(network_id, opts \\ []) do
+    [{:nifty_network_id, network_id} | opts]
+    |> Utils.build_operation(:create_network_interface)
+  end
 end

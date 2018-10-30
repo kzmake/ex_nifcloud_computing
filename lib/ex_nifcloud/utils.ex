@@ -34,6 +34,14 @@ defmodule ExNifcloud.Computing.Utils do
   # Format Functions #
   # ---------------- #
 
+  defp format_param({:ip_address, value}) do
+    format(value, prefix: "IpAddress")
+  end
+
+  defp format_param({:placement_availability_zone, value}) do
+    format(value, prefix: "Placement.AvailabilityZone")
+  end
+
   defp format_param({:user_data_encoding, value}) do
     format(value, prefix: "UserData.Encoding")
   end
