@@ -380,4 +380,30 @@ defmodule ExNifcloud.Computing do
     [{:nifty_network_id, network_id} | opts]
     |> Utils.build_operation(:create_network_interface)
   end
+
+  @doc """
+  ネットワークインターフェースを削除するための Operation を生成します
+
+  ## API Doc:
+
+    - https://cloud.nifty.com/api/rest/DeleteNetworkInterface.htm
+
+  ## Examples:
+
+      iex> ExNifcloud.Computing.delete_network_interface("ni-xxxxxxxx")
+      %ExNifcloud.Operation.Query{
+        action: :delete_network_interface,
+        params: %{
+          NetworkInterfaceId: "ni-xxxxxxxx",
+        },
+        parser: &ExNifcloud.Utils.identity/2,
+        path: "/api/",
+        service: :computing
+      }
+  """
+  @spec delete_network_interface(network_interface_id :: binary) :: ExNifcloud.Operation.Query.t()
+  def delete_network_interface(network_interface_id) do
+    [{:network_interface_id, network_interface_id}]
+    |> Utils.build_operation(:delete_network_interface)
+  end
 end

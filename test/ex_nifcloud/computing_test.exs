@@ -61,6 +61,18 @@ defmodule ExNifcloud.Computing.Test do
              )
   end
 
+  test "delete_network_interface no options" do
+    expected =
+      Helper.build_query(
+        :delete_network_interface,
+        %{
+          NetworkInterfaceId: "ni-xxxxxxxx"
+        }
+      )
+
+    assert expected == Computing.delete_network_interface("ni-xxxxxxxx")
+  end
+
   # --------------- #
   # Instances Tests #
   # --------------- #
