@@ -73,6 +73,25 @@ defmodule ExNifcloud.Computing.Test do
     assert expected == Computing.delete_network_interface("ni-xxxxxxxx")
   end
 
+  test "modify_network_interface_attribute with ops" do
+    expected =
+      Helper.build_query(
+        :modify_network_interface_attribute,
+        %{
+          NetworkInterfaceId: "ni-xxxxxxxx",
+          IpAddress: "static",
+          Description: "description"
+        }
+      )
+
+    assert expected ==
+             Computing.modify_network_interface_attribute(
+               "ni-xxxxxxxx",
+               ip_address: "static",
+               description: "description"
+             )
+  end
+
   # --------------- #
   # Instances Tests #
   # --------------- #
