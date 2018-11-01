@@ -406,4 +406,39 @@ defmodule ExNifcloud.Computing do
     [{:network_interface_id, network_interface_id}]
     |> Utils.build_operation(:delete_network_interface)
   end
+
+  @doc """
+  ネットワークインターフェースを更新するための Operation を生成します
+
+  ## API Doc:
+
+    - https://cloud.nifty.com/api/rest/ModifyNetworkInterfaceAttribute.htm
+
+  ## Examples:
+
+      iex> ExNifcloud.Computing.modify_network_interface_attribute("ni-xxxxxxxx")
+      %ExNifcloud.Operation.Query{
+        action: :modify_network_interface_attribute,
+        params: %{
+          NetworkInterfaceId: "ni-xxxxxxxx",
+        },
+        parser: &ExNifcloud.Utils.identity/2,
+        path: "/api/",
+        service: :computing
+      }
+  """
+  @type modify_network_interface_attribute_opts :: [
+          ip_address: binary,
+          description: binary
+        ]
+  @spec modify_network_interface_attribute(network_interface_id :: binary) ::
+          ExNifcloud.Operation.Query.t()
+  @spec modify_network_interface_attribute(
+          network_interface_id :: binary,
+          opts :: modify_network_interface_attribute_opts
+        ) :: ExNifcloud.Operation.Query.t()
+  def modify_network_interface_attribute(network_interface_id, opts \\ []) do
+    [{:network_interface_id, network_interface_id} | opts]
+    |> Utils.build_operation(:modify_network_interface_attribute)
+  end
 end
